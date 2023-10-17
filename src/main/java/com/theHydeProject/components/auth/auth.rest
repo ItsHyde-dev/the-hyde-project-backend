@@ -1,0 +1,17 @@
+post http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+###############
+
+post http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+    "username": "test",
+    "password": "test"
+}
