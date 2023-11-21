@@ -56,6 +56,8 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<ResponseBody> login(@Valid @RequestBody LoginDto body) {
 
+        System.out.println("Login started");
+
         if (body.getUsername() == null || body.getPassword() == null) {
             return response.builder()
                     .message("Missing username or password")
@@ -64,6 +66,8 @@ public class AuthController {
         }
 
         Optional<Users> user = userRepository.findByUsername(body.getUsername());
+
+        System.out.println("Find User finished");
 
         if (user.isPresent()) {
             if (passwordEncoder.matches(body.getPassword(), user.get().getPassword())) {
@@ -76,6 +80,7 @@ public class AuthController {
                         .build();
             }
         }
+        System.out.println("Returning invalid password or username error");
 
         return response.builder()
                 .status(HttpStatus.BAD_REQUEST)

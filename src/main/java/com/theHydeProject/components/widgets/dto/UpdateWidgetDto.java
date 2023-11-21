@@ -6,8 +6,6 @@ public class UpdateWidgetDto {
 
     @NotNull
     public Long widgetId;
+    public Object data;
 
-    public String data;
-
-    public Integer position;
 }

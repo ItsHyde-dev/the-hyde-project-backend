@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class CreateWidgetDto {
 
-    public Long widgetId;
-    public Long userId;
+    public String widgetId;
+    public String name;
+    public String linkWidgetId;
     public String data;
-    public int position;
 
 }

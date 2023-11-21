@@ -38,6 +38,9 @@ public class Users {
   @OneToMany(mappedBy = "user")
   private Set<WidgetData> widgetData = new HashSet<WidgetData>();
 
+  @Column(name = "layouts")
+  private String layouts;
+
   public void addRole(Roles role) {
     this.roles.add(role);
   }

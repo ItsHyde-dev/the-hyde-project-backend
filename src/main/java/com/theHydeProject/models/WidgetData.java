@@ -1,23 +1,31 @@
 package com.theHydeProject.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "widget_data")
+@ToString
 public class WidgetData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @ManyToOne
@@ -25,21 +33,21 @@ public class WidgetData {
     private Widgets widget;
 
     @Column(nullable = false)
-    @Lob
-    private String data;
+    private String name;
 
     @Column(nullable = false)
-    private int position;
+    private String data;
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
 
-    public WidgetData(Widgets widget, String data, int position, Users user) {
-        this.widget = widget;
-        this.data = data;
-        this.position = position;
-        this.user = user;
-    }
+    // @Column(name = "layouts")
+    // private String layouts;
 
+    @Column(name = "link_id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long linkId;
 }

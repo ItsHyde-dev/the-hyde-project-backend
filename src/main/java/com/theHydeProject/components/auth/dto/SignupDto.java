@@ -1,5 +1,6 @@
 package com.theHydeProject.components.auth.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -7,7 +8,7 @@ import lombok.Data;
 @Data
 public class SignupDto {
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
+    @Email
     private String username;
 
     @NotNull
