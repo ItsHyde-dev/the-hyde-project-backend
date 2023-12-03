@@ -12,6 +12,6 @@ public class LoginDto {
     private String username;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
+    @Pattern(regexp = "^[ A-Za-z0-9_@./#&+-]*$", message = "Password should contain only A-Za-z0-9_@./#&+-")
     private String password;
 }

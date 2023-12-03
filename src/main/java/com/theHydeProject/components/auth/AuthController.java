@@ -2,8 +2,11 @@ package com.theHydeProject.components.auth;
 
 import java.util.Optional;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +43,7 @@ public class AuthController {
     private ResponseBuilderFactory response;
 
     @PostMapping("signup")
-    public void signup(@Valid @RequestBody SignupDto body) {
+    public ResponseEntity<ResponseBody> signup(@Valid @RequestBody SignupDto body) {
         Users user = new Users();
         user.setUsername(body.getUsername());
         user.setPassword(passwordEncoder.encode(body.getPassword()));
@@ -50,7 +53,29 @@ public class AuthController {
             user.addRole(role.get());
         }
 
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            String columnName = null;
+            if (e.getCause() instanceof ConstraintViolationException) {
+                ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
+                columnName = constraintViolationException.getConstraintName();
+                columnName = columnName.substring(columnName.indexOf("_") + 1, columnName.lastIndexOf("_"));
+            } else {
+                columnName = "User";
+            }
+
+            return response.builder().status(HttpStatus.BAD_REQUEST).message(columnName + " already exists")
+                    .build();
+        } catch (Exception e) {
+            return response.builder().status(HttpStatus.BAD_REQUEST).message(e.getMessage()).build();
+        }
+
+        LoginDto loginDto = new LoginDto();
+        loginDto.setUsername(body.getUsername());
+        loginDto.setPassword(body.getPassword());
+
+        return this.login(loginDto);
     }
 
     @PostMapping("login")
